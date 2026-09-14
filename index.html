@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="el">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#08111f">
+<title>Αντίστροφη μέτρηση Λυκείου 🇬🇷</title>
+<style>
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:linear-gradient(145deg,#07101d,#12345a);color:#fff;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;display:flex;align-items:center;justify-content:center;padding:18px}.card{width:min(440px,100%);text-align:center;padding:30px 16px;border-radius:30px;background:rgba(7,12,21,.86);border:1px solid rgba(255,255,255,.12);box-shadow:0 22px 70px rgba(0,0,0,.4)}.flag{font-size:50px}.school{font-size:13px;letter-spacing:4px;opacity:.6;margin-top:6px}h1{font-size:28px;margin:18px 0 6px}.sub{opacity:.6;margin-bottom:20px}.week{font-size:21px;font-weight:800;padding:14px;border-radius:18px;background:rgba(255,255,255,.08);margin-bottom:12px}.schooldays{font-size:18px;font-weight:700;padding:13px;border-radius:16px;background:rgba(255,255,255,.06);margin-bottom:12px}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.box{background:rgba(255,255,255,.07);border-radius:16px;padding:14px 2px}.num{font-size:28px;font-weight:800}.label{font-size:9px;opacity:.55;margin-top:5px}.date{font-size:10px;opacity:.4;margin-top:18px;line-height:1.4}
+</style>
+</head>
+<body><div class="card">
+<div class="flag">🇬🇷</div><div class="school">ΛΥΚΕΙΟ</div>
+<h1>Μέχρι να κλείσουν τα σχολεία</h1><div class="sub">Ελλάδα • Λύκειο</div>
+<div class="week">⏳ <span id="weeks">--</span> ΕΒΔΟΜΑΔΕΣ ΑΠΟΜΕΝΟΥΝ</div>
+<div class="schooldays">📚 <span id="schooldays">--</span> ΣΧΟΛΙΚΕΣ ΗΜΕΡΕΣ ΑΠΟΜΕΝΟΥΝ</div>
+<div class="grid">
+<div class="box"><div class="num" id="days">--</div><div class="label">ΗΜΕΡΕΣ</div></div>
+<div class="box"><div class="num" id="hours">--</div><div class="label">ΩΡΕΣ</div></div>
+<div class="box"><div class="num" id="minutes">--</div><div class="label">ΛΕΠΤΑ</div></div>
+<div class="box"><div class="num" id="seconds">--</div><div class="label">ΔΕΥΤΕΡΟΛΕΠΤΑ</div></div>
+</div>
+<div class="date">Στόχος: 15 Μαΐου 2027<br>Υπολογισμός σχολικών ημερών: Δευτέρα–Παρασκευή, με αφαίρεση των διακοπών Χριστουγέννων και Πάσχα.</div>
+</div>
+<script>
+const target=new Date("2027-05-15T00:00:00");
+const holidays=[
+["2026-12-24","2027-01-07"],
+["2027-04-26","2027-05-09"]
+];
+function isHoliday(d){
+ const x=d.getTime();
+ return holidays.some(([a,b])=>x>=new Date(a+"T00:00:00").getTime()&&x<=new Date(b+"T23:59:59").getTime());
+}
+function schoolDaysLeft(){
+ let d=new Date(); d.setHours(0,0,0,0); let count=0;
+ while(d<target){
+  const day=d.getDay();
+  if(day!==0&&day!==6&&!isHoliday(d)) count++;
+  d.setDate(d.getDate()+1);
+ }
+ return count;
+}
+function update(){
+ const diff=Math.max(0,target-Date.now()), total=Math.floor(diff/1000), totalDays=Math.floor(total/86400);
+ document.getElementById("weeks").textContent=Math.floor(totalDays/7);
+ document.getElementById("schooldays").textContent=schoolDaysLeft();
+ document.getElementById("days").textContent=totalDays;
+ document.getElementById("hours").textContent=String(Math.floor(total%86400/3600)).padStart(2,"0");
+ document.getElementById("minutes").textContent=String(Math.floor(total%3600/60)).padStart(2,"0");
+ document.getElementById("seconds").textContent=String(total%60).padStart(2,"0");
+}
+update();setInterval(update,1000);
+</script></body></html>
